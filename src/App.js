@@ -2,6 +2,7 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
+  Navigate,
 } from "react-router-dom";
 
 import Home from "./pages/home/Home";
@@ -20,7 +21,11 @@ function App() {
         <Route path="/" element={<Home/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<Signup/>} />
-        <Route path="/payment" element={<Payment/>} />
+        <Route path="/payment" element={
+        <ProtectedRoutes>
+        <Payment/>
+      </ProtectedRoutes>
+        } />
       </Routes>
       <ToastContainer/>
     </Router>
@@ -28,3 +33,12 @@ function App() {
 }
 
 export default App;
+
+export const ProtectedRoutes = ({ children }) => {
+  if (localStorage.getItem('currentUser')) {
+    return children
+  }
+  else {
+    return <Navigate to='/login' />
+  }
+}

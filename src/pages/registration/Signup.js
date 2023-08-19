@@ -1,9 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { toast } from 'react-toastify';
-import { addDoc, collection } from 'firebase/firestore';
-import { auth, fireDB } from '../../firebase/firebaseConfig';
+import firebase from "../../firebase/firebaseConfig"
 import { FallingLines } from 'react-loader-spinner';
 
 function Signup() {
@@ -14,29 +13,45 @@ function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const navigate = useNavigate();
+
     const signup = async () => {
         setLoading(true);
         if (name === "" || email === "" || password === "" ) {
             return toast.error("All required fields")
         }
-        try {
-            const users = await createUserWithEmailAndPassword(auth, email, password)
-            var user = {
-                name: name,
-                uid: users.user.uid,
-                email: users.user.email
-            }
-            const userRef = collection(fireDB, "user")
-            await addDoc(userRef,user)
-            setName("")
-            setEmail("")
-            setPassword("")
-            toast.success('Signup Success')
-            setLoading(false)
-        } catch (error) {
-            toast.error('Signup Failed')
-            setLoading(false)
+        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        if (!emailRegex.test(email)) {
+            return toast.error("Please provide a valid")
         }
+
+        try {
+            const response = await firebase.auth().createUserWithEmailAndPassword(email, password);
+
+            if (response.user) {
+                await response.user.updateProfile({ displayName: name });
+
+                const uid = response.user.uid;
+                const useRef = firebase.database().ref('users/' + uid);
+                await useRef.set({
+                    uid: uid,
+                    email: email,
+                    userName: name
+                });
+            }
+
+            setName("");
+            setEmail("");
+            setPassword("");
+            toast.success('Signup Success');
+            navigate("/login");
+        } catch (error) {
+            toast.error('Signup Failed');
+        } finally {
+            setLoading(false); // Reset loading state in both success and error cases
+        }    
+        
     }
    
     return (
