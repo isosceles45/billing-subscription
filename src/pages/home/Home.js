@@ -131,8 +131,8 @@ const Home = () => {
               key={idx}
               className={`bg-white px-6 py-6 rounded-xl text-[#4f7cff] w-full mx-auto grid 
               place-items-center ${
-                planType === item.name.toLowerCase() &&
-                "border-[16px] border-green-400"
+                planType === item.name.toLowerCase() && userId != "" &&
+                "border-[8px] rounded-sm border-green-400"
               }`}
             >
               <div className="text-4xl text-slate-700 text-center py-4 font-bold">
@@ -149,7 +149,7 @@ const Home = () => {
                     : `${item.yearlyPrice}`}
               </div>
               <div className="mx-auto flex justify-center items-center my-3">
-                {planType === item.name.toLowerCase() ? (
+                {userId != "" && planType === item.name.toLowerCase() ? (
                   <button className="bg-green-600 text-white rounded-md text-base uppercase w-auto py-2 px-4 font-bold">
                     Subscribed
                   </button>
