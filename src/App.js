@@ -6,12 +6,13 @@ import {
 } from "react-router-dom";
 
 import Home from "./pages/home/Home";
-import Payment from "./pages/payment/Payment";
 import Signup from "./pages/registration/Signup";
 import Login from "./pages/registration/Login";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Success from "./pages/payment/Success";
+import Cancel from "./pages/payment/Cancel";
 
 
 function App() {
@@ -21,11 +22,8 @@ function App() {
         <Route path="/" element={<Home/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<Signup/>} />
-        <Route path="/payment" element={
-        <ProtectedRoutes>
-        <Payment/>
-      </ProtectedRoutes>
-        } />
+        <Route path="/success" element={<Success/>} />
+        <Route path="/cancel" element={<Cancel/>} />
       </Routes>
       <ToastContainer/>
     </Router>
