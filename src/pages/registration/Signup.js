@@ -48,6 +48,7 @@ function Signup() {
             navigate("/login");
         } catch (error) {
             toast.error('Signup Failed');
+            console.log(error.message);
         } finally {
             setLoading(false); // Reset loading state in both success and error cases
         }    
